@@ -66,7 +66,17 @@ export function PlanBoard({
           <ul>
             {issues.map((issue, index) => (
               <li key={`${issue.type}-${issue.courseCode ?? "catalog"}-${index}`}>
-                {issue.message}
+                <span>{issue.message}</span>
+                <small>
+                  <strong>
+                    Suggested fix
+                    {issue.suggestion.changeCount === null
+                      ? ""
+                      : ` (${issue.suggestion.changeCount} change${issue.suggestion.changeCount === 1 ? "" : "s"})`}
+                    :
+                  </strong>{" "}
+                  {issue.suggestion.message}
+                </small>
               </li>
             ))}
           </ul>

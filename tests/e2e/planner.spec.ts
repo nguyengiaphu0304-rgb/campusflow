@@ -78,6 +78,38 @@ test("exposes visible keyboard focus for the backup controls", async ({ page }) 
   ).not.toBe("none");
 });
 
+test("renders a minimum-change suggestion for an invalid sequence", async ({
+  page,
+}) => {
+  const conflictPlan = {
+    schema: "campusflow-plan",
+    version: 1,
+    exportedAt: "2026-07-14T00:00:00.000Z",
+    plan: {
+      terms: [
+        {
+          id: "conflict-fall",
+          label: "Conflict Fall",
+          courses: ["CSC207H1"],
+        },
+      ],
+    },
+  };
+  await page
+    .getByLabel("Choose a CampusFlow JSON plan to import")
+    .setInputFiles({
+      name: "conflict-plan.json",
+      mimeType: "application/json",
+      buffer: Buffer.from(JSON.stringify(conflictPlan)),
+    });
+
+  await expect(page.getByText("CSC207H1 requires", { exact: false })).toBeVisible();
+  await expect(page.getByText("Suggested fix (1 change):", { exact: false })).toBeVisible();
+  await expect(
+    page.getByText("Choose one minimum-change path:", { exact: false }),
+  ).toBeVisible();
+});
+
 test("has no serious or critical automated accessibility violations", async ({
   page,
 }) => {
