@@ -13,7 +13,7 @@
 
 - [ ] Drag-and-drop term sequencing with keyboard alternative
 - [ ] Degree requirement rules and progress groups
-- [ ] Import/export of a portable plan file
+- [x] Import/export of a portable, versioned plan file
 - [ ] Conflict explanations that identify the smallest corrective action
 - [ ] Component-level accessibility tests
 
