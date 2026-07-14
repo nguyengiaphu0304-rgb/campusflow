@@ -11,7 +11,7 @@
 
 ## v0.2 · Planning depth
 
-- [ ] Drag-and-drop term sequencing with keyboard alternative
+- [x] Drag-and-drop term sequencing with keyboard alternative
 - [x] Degree requirement rules and progress groups
 - [x] Import/export of a portable, versioned plan file
 - [x] Conflict explanations that identify the smallest corrective action

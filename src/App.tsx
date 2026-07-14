@@ -7,7 +7,7 @@ import { PrerequisiteGraph } from "./components/PrerequisiteGraph";
 import { demoCourses, demoTerms } from "./data/demoCourses";
 import { demoProgram } from "./data/demoProgram";
 import type { AcademicTerm } from "./domain/plan";
-import { totalCredits, validatePlan } from "./domain/plan";
+import { moveTerm, totalCredits, validatePlan } from "./domain/plan";
 
 const STORAGE_KEY = "campusflow.plan.v1";
 
@@ -74,6 +74,10 @@ export default function App() {
     );
   }
 
+  function reorderTerm(termId: string, destinationIndex: number): void {
+    setTerms((current) => moveTerm(current, termId, destinationIndex));
+  }
+
   function resetPlan(): void {
     setTerms(structuredClone(demoTerms));
   }
@@ -134,6 +138,7 @@ export default function App() {
             catalog={demoCourses}
             terms={terms}
             issues={issues}
+            onMoveTerm={reorderTerm}
             onRemove={removeCourse}
           />
         </section>
