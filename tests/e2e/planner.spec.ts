@@ -18,6 +18,49 @@ test("exposes the active catalog snapshot and its source", async ({ page }) => {
   await expect(provenance).toContainText("not an official U of T calendar snapshot");
 });
 
+test("installs metadata and restores the persisted planner offline", async ({
+  context,
+  page,
+}) => {
+  const manifest = await page.evaluate(async () => {
+    const link = document.querySelector<HTMLLinkElement>('link[rel="manifest"]');
+    if (!link) throw new Error("Manifest link is missing.");
+    return fetch(link.href).then((response) => response.json()) as Promise<{
+      name: string;
+      display: string;
+      start_url: string;
+      icons: Array<{ purpose: string }>;
+    }>;
+  });
+  expect(manifest).toEqual(expect.objectContaining({
+    name: "CampusFlow Course Planner",
+    display: "standalone",
+    start_url: "./",
+  }));
+  expect(manifest.icons.map(({ purpose }) => purpose)).toContain("any");
+  expect(manifest.icons.map(({ purpose }) => purpose)).toContain("maskable");
+
+  await expect.poll(() => page.evaluate(async () => {
+    const registration = await navigator.serviceWorker.ready;
+    return registration.active?.state;
+  })).toBe("activated");
+  await page.reload();
+  await expect.poll(() => page.evaluate(() => Boolean(navigator.serviceWorker.controller)))
+    .toBe(true);
+
+  await page.getByRole("button", { name: "Move Year 1 · Fall later" }).click();
+  await expect(page.locator(".term-card h3").first()).toHaveText("Year 1 · Winter");
+
+  await context.setOffline(true);
+  try {
+    await page.reload({ waitUntil: "domcontentloaded" });
+    await expect(page.getByRole("heading", { name: /See every course/ })).toBeVisible();
+    await expect(page.locator(".term-card h3").first()).toHaveText("Year 1 · Winter");
+  } finally {
+    await context.setOffline(false);
+  }
+});
+
 test("explains deterministic changes between catalog snapshots", async ({ page }) => {
   await expect(page.getByRole("heading", { name: "Catalog changes" })).toBeVisible();
   await expect(page.getByText("5 changes", { exact: true })).toBeVisible();

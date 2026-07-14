@@ -15,6 +15,7 @@ import {
 import { demoProgram } from "./data/demoProgram";
 import type { AcademicTerm } from "./domain/plan";
 import { moveTerm, totalCredits, validatePlan } from "./domain/plan";
+import { activatePwaUpdate, registerPwa } from "./pwa";
 
 const STORAGE_KEY = "campusflow.plan.v1";
 
@@ -49,6 +50,7 @@ function loadPlan(): AcademicTerm[] {
 
 export default function App() {
   const [terms, setTerms] = useState<AcademicTerm[]>(loadPlan);
+  const [pwaUpdate, setPwaUpdate] = useState<ServiceWorkerRegistration | null>(null);
   const scheduled = useMemo(
     () => new Set(terms.flatMap((term) => term.courses)),
     [terms],
@@ -59,6 +61,10 @@ export default function App() {
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(terms));
   }, [terms]);
+
+  useEffect(() => {
+    void registerPwa(setPwaUpdate);
+  }, []);
 
   function addCourse(termId: string, courseCode: string): void {
     if (scheduled.has(courseCode)) return;
@@ -98,6 +104,15 @@ export default function App() {
         </a>
         <span className="privacy-note">Local-first · no account required</span>
       </header>
+
+      {pwaUpdate && (
+        <aside className="update-notice" aria-label="Application update" aria-live="polite">
+          <span>A new CampusFlow version is ready.</span>
+          <button type="button" onClick={() => activatePwaUpdate(pwaUpdate)}>
+            Update now
+          </button>
+        </aside>
+      )}
 
       <main id="main-content" tabIndex={-1}>
         <section className="hero" id="top">

@@ -31,6 +31,7 @@ explicitly exports it.
 - Visualize the transitive prerequisite graph.
 - Persist a draft in browser local storage.
 - Export and transactionally import a versioned JSON backup.
+- Install the planner and reopen a previously loaded app shell without a network.
 - Navigate the core workflow by keyboard, with visible focus and announced
   import results.
 
@@ -117,6 +118,23 @@ manual screen-reader, zoom, reflow, keyboard, or assistive-input testing.
    linked source note, and retrieval timestamp.
 9. Review Catalog changes to distinguish planning-impact changes from metadata
    edits across the two explicitly synthetic bundled snapshots.
+10. Install CampusFlow from the browser, reload it once online, then enable
+    offline mode and reload again; the application shell and local plan remain
+    available.
+
+## Progressive web app behavior
+
+The production build generates a content-versioned service worker from the
+actual hashed assets. It precaches the minimal app shell, handles navigations
+network-first with an offline fallback, and serves same-origin static assets
+cache-first. Cross-origin and non-GET requests are never intercepted.
+
+New workers remain waiting while an older version controls an open page. An
+accessible update notice lets the user explicitly activate the worker, after
+which the page reloads once under the new version. Only caches beginning with
+`campusflow-shell-` are eligible for cleanup. Service workers cache application
+code and public fixture data, never exported plan files; plan state remains in
+browser local storage.
 
 For a portfolio screenshot, use a 1440 × 900 viewport with the planner and graph
 visible. The repository does not include fabricated screenshots or usage claims.
@@ -164,6 +182,9 @@ change while operator type and nesting remain meaningful.
   manual screen-reader, zoom, contrast, and keyboard testing.
 - Pointer drag behavior can vary with browser and assistive input combinations.
   The visible Earlier/Later controls provide the supported non-drag alternative.
+- Offline use requires one successful online production visit and service-worker
+  installation first. Clearing site data removes both cached shell files and the
+  locally stored plan.
 
 ## License
 

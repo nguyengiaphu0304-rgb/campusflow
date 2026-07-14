@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="CampusFlow">
+  <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#4fe2c1"/><stop offset="1" stop-color="#ffca6a"/></linearGradient></defs>
+  <rect width="512" height="512" rx="112" fill="#08111f"/>
+  <path d="M128 256c0-82 52-136 132-136 48 0 86 18 113 52l-55 45c-16-20-34-30-57-30-40 0-66 27-66 69s26 69 66 69c23 0 41-10 57-30l55 45c-27 34-65 52-113 52-80 0-132-54-132-136Z" fill="url(#g)"/>
+  <path d="M252 231h128v52H252z" fill="#f5fbfa" opacity=".92"/>
+</svg>
