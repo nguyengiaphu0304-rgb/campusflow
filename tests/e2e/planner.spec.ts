@@ -18,6 +18,26 @@ test("exposes the active catalog snapshot and its source", async ({ page }) => {
   await expect(provenance).toContainText("not an official U of T calendar snapshot");
 });
 
+test("explains deterministic changes between catalog snapshots", async ({ page }) => {
+  await expect(page.getByRole("heading", { name: "Catalog changes" })).toBeVisible();
+  await expect(page.getByText("5 changes", { exact: true })).toBeVisible();
+  const summary = page.locator('dl[aria-label="Catalog change summary"]');
+  await expect(summary).toContainText("Added1");
+  await expect(summary).toContainText("Removed1");
+  await expect(summary).toContainText("Modified3");
+  await expect(summary).toContainText("Planning impact4");
+  await expect(summary).toContainText("Metadata only1");
+
+  const prerequisiteChange = page.getByRole("article", { name: /CSC263H1/ });
+  await expect(prerequisiteChange).toContainText("Planning impact");
+  await expect(prerequisiteChange).toContainText("Prerequisites");
+  await expect(prerequisiteChange).toContainText("CSC207H1 and CSC236H1");
+
+  const copyChange = page.getByRole("article", { name: /CSC236H1/ });
+  await expect(copyChange).toContainText("Metadata only");
+  await expect(page.getByText("not actual U of T calendar changes")).toBeVisible();
+});
+
 test("exports the current plan as a valid portable document", async ({
   page,
 }) => {

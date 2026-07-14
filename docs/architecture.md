@@ -132,6 +132,28 @@ hand-authored. It does not imply that U of T published, endorsed, or was queried
 for this data. Future upstream ingestion must preserve its real source, retrieval
 time, transformation record, and redistribution terms.
 
+### ADR-007: snapshot differences are semantic, deterministic, and conservative
+
+**Status:** accepted.
+
+Only snapshots that already passed the catalog trust boundary may be compared.
+The comparison indexes courses by stable code and emits added, removed, and
+modified records in lexical order. A missing code is an addition or removal;
+the engine deliberately does not guess that two differently coded courses are a
+rename.
+
+Modified records contain explicit before/after values for title, description,
+credits, breadth category, and prerequisite rules. Credit and prerequisite
+changes are classified as planning impact, while descriptive fields are
+metadata. This is a conservative product signal, not an academic-advising risk
+assessment.
+
+Prerequisite expressions use recursive canonical signatures. Children of
+commutative `all` and `any` nodes are sorted, so source ordering alone is
+ignored, while operator type and nesting remain significant. Both bundled
+snapshots are documented synthetic fixtures; their differences do not represent
+historical U of T calendar changes.
+
 ## Data and threat model
 
 The plan contains term labels and course codes. It is user-controlled data and
@@ -148,6 +170,6 @@ malicious browser extensions are outside this application's control.
 
 ## Near-term evolution
 
-The next architecture milestone compares two validated snapshots and explains
-added, removed, and materially changed courses. Any live academic data must show
-its source and retrieval date and must never be presented as official advising.
+The next architecture milestone establishes measurable performance and
+accessibility budgets before deployment. Any live academic data must show its
+source and retrieval date and must never be presented as official advising.

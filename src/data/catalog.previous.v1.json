@@ -1,0 +1,24 @@
+{
+  "schema": "campusflow-catalog",
+  "version": 1,
+  "snapshotId": "illustrative-2026-06-01",
+  "source": {
+    "name": "CampusFlow illustrative fixture",
+    "url": "https://github.com/nguyengiaphu0304-rgb/campusflow/blob/main/docs/fixture-catalog.md",
+    "retrievedAt": "2026-06-01T00:00:00.000Z",
+    "note": "Synthetic earlier state for demonstrating change detection; not an official U of T calendar snapshot."
+  },
+  "courses": [
+    { "code": "CSC108H1", "title": "Introduction to Computer Programming", "description": "Programming foundations and computational problem solving.", "credits": 0.5, "breadth": "CS foundations" },
+    { "code": "CSC110Y1", "title": "Foundations of Computer Science I", "description": "Programming, data modelling, and computational problem solving.", "credits": 0.5, "breadth": "CS foundations" },
+    { "code": "CSC111H1", "title": "Foundations of Computer Science II", "description": "Abstract data types, software design, and algorithmic analysis.", "credits": 0.5, "breadth": "CS foundations", "prerequisites": { "type": "course", "code": "CSC110Y1" } },
+    { "code": "CSC148H1", "title": "Introduction to Computer Science", "description": "Object-oriented design, recursion, and data structures.", "credits": 0.5, "breadth": "CS foundations" },
+    { "code": "CSC165H1", "title": "Mathematical Expression and Reasoning", "description": "Proofs, asymptotic analysis, and mathematical reasoning for CS.", "credits": 0.5, "breadth": "Theory" },
+    { "code": "CSC207H1", "title": "Software Design", "description": "Team software development, architecture, testing, and maintainability.", "credits": 0.5, "breadth": "Software", "prerequisites": { "type": "any", "requirements": [{ "type": "course", "code": "CSC111H1" }, { "type": "course", "code": "CSC148H1" }] } },
+    { "code": "CSC236H1", "title": "Theory of Computation I", "description": "Induction, correctness, recurrence relations, and formal languages.", "credits": 0.5, "breadth": "Theory", "prerequisites": { "type": "any", "requirements": [{ "type": "course", "code": "CSC111H1" }, { "type": "course", "code": "CSC165H1" }] } },
+    { "code": "CSC263H1", "title": "Data Structures and Analysis", "description": "Design and analysis of efficient data structures and algorithms.", "credits": 0.5, "breadth": "Algorithms", "prerequisites": { "type": "course", "code": "CSC207H1" } },
+    { "code": "MAT148H1", "title": "Calculus I with Proofs", "description": "Limits, continuity, differentiation, and proof-based calculus.", "credits": 0.5, "breadth": "Mathematics" },
+    { "code": "MAT149H1", "title": "Calculus II with Proofs", "description": "A continuation of proof-based single-variable calculus.", "credits": 0.5, "breadth": "Mathematics", "prerequisites": { "type": "course", "code": "MAT148H1" } },
+    { "code": "STA130H1", "title": "An Introduction to Statistical Reasoning and Data Science", "description": "Data exploration, uncertainty, and reproducible statistical analysis.", "credits": 0.5, "breadth": "Statistics" }
+  ]
+}

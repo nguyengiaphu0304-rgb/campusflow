@@ -27,6 +27,7 @@ explicitly exports it.
 - Evaluate compositional course and credit requirement groups with live progress.
 - Reorder academic terms by pointer drag or equivalent Earlier/Later controls.
 - Load a versioned catalog snapshot only after structural, graph, and provenance validation.
+- Compare validated snapshots with deterministic, planning-impact-aware explanations.
 - Visualize the transitive prerequisite graph.
 - Persist a draft in browser local storage.
 - Export and transactionally import a versioned JSON backup.
@@ -73,7 +74,8 @@ npm run audit
 Tests cover prerequisite semantics, graph traversal and cycles, plan validation,
 portable-file round trips, malformed, oversized, unsupported, duplicate, and
 unknown import data, degree-rule alternatives, credit selectors, term reordering,
-catalog schema limits, provenance, dangling references, and cycles. The
+catalog schema limits, provenance, dangling references, cycles, and semantic
+snapshot differences. The
 dependency audit fails on high or critical known
 vulnerabilities.
 
@@ -103,6 +105,8 @@ with its Linux system dependencies automatically.
    prerequisite validation update immediately and the order persist on reload.
 8. Inspect Catalog provenance to see the active snapshot ID, schema version,
    linked source note, and retrieval timestamp.
+9. Review Catalog changes to distinguish planning-impact changes from metadata
+   edits across the two explicitly synthetic bundled snapshots.
 
 For a portfolio screenshot, use a 1440 × 900 viewport with the planner and graph
 visible. The repository does not include fabricated screenshots or usage claims.
@@ -127,11 +131,17 @@ or excessive prerequisite depth and size.
 The current source is a documented hand-authored fixture, not upstream U of T
 data. See [fixture provenance](docs/fixture-catalog.md).
 
+Snapshot comparison matches courses by code and produces a stable lexical order
+with explicit before/after values. Credit and prerequisite changes are marked as
+planning impact; descriptive metadata changes are kept separate. Recursive
+`all`/`any` branches are canonicalized so child order alone is not reported as a
+change while operator type and nesting remain meaningful.
+
 ## Limitations
 
 - Catalog content is a small fixture and may be outdated or incomplete.
-- Catalog version 1 has validation but not migration or snapshot-to-snapshot
-  change detection yet.
+- Catalog version 1 has validation and deterministic comparison, but no schema
+  migration or automated upstream retrieval.
 - The requirement fixture is not an official degree audit. Exclusions,
   co-requisites, transfer credits, enrollment capacity, and calendar-year rules
   are not modeled.

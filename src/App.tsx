@@ -1,11 +1,17 @@
 import { useEffect, useMemo, useState } from "react";
 import { CourseCatalog } from "./components/CourseCatalog";
 import { CatalogProvenance } from "./components/CatalogProvenance";
+import { CatalogChanges } from "./components/CatalogChanges";
 import { DegreeProgress } from "./components/DegreeProgress";
 import { PlanBoard } from "./components/PlanBoard";
 import { PlanTransfer } from "./components/PlanTransfer";
 import { PrerequisiteGraph } from "./components/PrerequisiteGraph";
-import { demoCatalogSnapshot, demoCourses, demoTerms } from "./data/demoCourses";
+import {
+  demoCatalogSnapshot,
+  demoCourses,
+  demoPreviousCatalogSnapshot,
+  demoTerms,
+} from "./data/demoCourses";
 import { demoProgram } from "./data/demoProgram";
 import type { AcademicTerm } from "./domain/plan";
 import { moveTerm, totalCredits, validatePlan } from "./domain/plan";
@@ -123,6 +129,11 @@ export default function App() {
         </section>
 
         <CatalogProvenance snapshot={demoCatalogSnapshot} />
+
+        <CatalogChanges
+          previous={demoPreviousCatalogSnapshot}
+          current={demoCatalogSnapshot}
+        />
 
         <section className="workspace" id="planner" aria-label="Course planning workspace">
           <CourseCatalog
