@@ -19,7 +19,6 @@ export function PlanBoard({
 }: PlanBoardProps) {
   const catalogByCode = new Map(catalog.map((item) => [item.code, item]));
   const [announcement, setAnnouncement] = useState("");
-  const [dragTargetId, setDragTargetId] = useState<string | null>(null);
   const draggingTermId = useRef<string | null>(null);
   const moveButtonRefs = useRef(new Map<string, HTMLButtonElement>());
 
@@ -55,7 +54,13 @@ export function PlanBoard({
     const termId = draggingTermId.current ?? event.dataTransfer.getData("text/plain");
     announceMove(termId, destinationIndex);
     draggingTermId.current = null;
-    setDragTargetId(null);
+    event.currentTarget.classList.remove("drag-target");
+  }
+
+  function clearDragTargets(): void {
+    document.querySelectorAll(".term-card.drag-target").forEach((element) => {
+      element.classList.remove("drag-target");
+    });
   }
 
   return (
@@ -73,18 +78,18 @@ export function PlanBoard({
       <div className="term-grid">
         {terms.map((term, index) => (
           <article
-            className={`term-card${dragTargetId === term.id ? " drag-target" : ""}`}
+            className="term-card"
             data-term-id={term.id}
             key={term.id}
-            onDragEnter={() => {
+            onDragEnter={(event) => {
               if (draggingTermId.current && draggingTermId.current !== term.id) {
-                setDragTargetId(term.id);
+                event.currentTarget.classList.add("drag-target");
               }
             }}
+            onDragLeave={(event) => event.currentTarget.classList.remove("drag-target")}
             onDragOver={(event) => {
-              if (draggingTermId.current && draggingTermId.current !== term.id) {
-                event.preventDefault();
-              }
+              event.preventDefault();
+              event.dataTransfer.dropEffect = "move";
             }}
             onDrop={(event) => dropTerm(event, index)}
           >
@@ -124,7 +129,7 @@ export function PlanBoard({
                   onDragStart={(event) => startDrag(event, term.id)}
                   onDragEnd={() => {
                     draggingTermId.current = null;
-                    setDragTargetId(null);
+                    clearDragTargets();
                   }}
                 >
                   ⠿
