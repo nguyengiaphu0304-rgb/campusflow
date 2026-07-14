@@ -7,6 +7,7 @@ import {
   planExportFilename,
   serializePlan,
 } from "../domain/portablePlan";
+import "./PlanTransfer.css";
 
 interface PlanTransferProps {
   catalog: readonly Course[];
@@ -38,7 +39,7 @@ export function PlanTransfer({
     link.href = url;
     link.download = planExportFilename(exportedAt);
     link.click();
-    URL.revokeObjectURL(url);
+    window.setTimeout(() => URL.revokeObjectURL(url), 0);
     setStatus({ kind: "success", message: "Plan exported as a JSON file." });
   }
 
@@ -94,6 +95,7 @@ export function PlanTransfer({
         className="visually-hidden"
         type="file"
         accept=".json,application/json"
+        aria-label="Choose a CampusFlow JSON plan to import"
         onChange={(event) => void importPlan(event)}
       />
       {status && (
