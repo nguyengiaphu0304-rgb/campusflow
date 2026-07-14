@@ -7,6 +7,17 @@ test.beforeEach(async ({ page }) => {
   await page.goto("/");
 });
 
+test("exposes the active catalog snapshot and its source", async ({ page }) => {
+  const provenance = page.getByRole("complementary", { name: "Catalog provenance" });
+  await expect(provenance).toContainText(
+    "Snapshot v1 · illustrative-2026-07-14",
+  );
+  await expect(provenance.getByRole("link", { name: "CampusFlow illustrative fixture" }))
+    .toHaveAttribute("href", /docs\/fixture-catalog\.md$/);
+  await expect(provenance.getByText("Retrieved 2026-07-14 00:00:00 UTC")).toBeVisible();
+  await expect(provenance).toContainText("not an official U of T calendar snapshot");
+});
+
 test("exports the current plan as a valid portable document", async ({
   page,
 }) => {

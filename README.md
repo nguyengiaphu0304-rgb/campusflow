@@ -26,6 +26,7 @@ explicitly exports it.
 - Explain each conflict with a deterministic minimum-change repair suggestion.
 - Evaluate compositional course and credit requirement groups with live progress.
 - Reorder academic terms by pointer drag or equivalent Earlier/Later controls.
+- Load a versioned catalog snapshot only after structural, graph, and provenance validation.
 - Visualize the transitive prerequisite graph.
 - Persist a draft in browser local storage.
 - Export and transactionally import a versioned JSON backup.
@@ -36,8 +37,8 @@ explicitly exports it.
 
 The React UI is intentionally thin. Framework-independent TypeScript modules in
 `src/domain` own prerequisite evaluation, graph algorithms, plan validation,
-credit totals, and portable-file validation. This keeps the decision logic
-independently testable and reusable.
+credit totals, portable-file validation, and the catalog trust boundary. This
+keeps the decision logic independently testable and reusable.
 
 See [architecture and ADRs](docs/architecture.md) for boundaries, the data and
 threat model, and design tradeoffs. See the [scoped roadmap](docs/roadmap.md) for
@@ -71,8 +72,9 @@ npm run audit
 
 Tests cover prerequisite semantics, graph traversal and cycles, plan validation,
 portable-file round trips, malformed, oversized, unsupported, duplicate, and
-unknown import data, degree-rule alternatives, credit selectors, ties, and term
-reordering boundaries. The dependency audit fails on high or critical known
+unknown import data, degree-rule alternatives, credit selectors, term reordering,
+catalog schema limits, provenance, dangling references, and cycles. The
+dependency audit fails on high or critical known
 vulnerabilities.
 
 Browser tests use Playwright with Chromium. Install its browser once, then run:
@@ -99,6 +101,8 @@ with its Linux system dependencies automatically.
    the closest permitted path explains what remains.
 7. Drag a term onto another position, or use its Earlier/Later buttons; notice
    prerequisite validation update immediately and the order persist on reload.
+8. Inspect Catalog provenance to see the active snapshot ID, schema version,
+   linked source note, and retrieval timestamp.
 
 For a portfolio screenshot, use a 1440 × 900 viewport with the planner and graph
 visible. The repository does not include fabricated screenshots or usage claims.
@@ -111,9 +115,23 @@ They must contain 1–24 unique terms, no more than 20 catalog courses per term,
 valid timestamps and identifiers, and no duplicate courses. Newer versions fail
 closed until a migration is deliberately implemented.
 
+## Catalog snapshot format
+
+The bundled JSON uses schema `campusflow-catalog` version `1`. It records a
+URL-safe snapshot ID, an HTTPS source URL, an ISO 8601 UTC retrieval timestamp,
+a provenance note, and bounded course records. JSON is capped at 1 MiB, parsed
+from `unknown`, and fails closed on malformed fields, unexpected keys, duplicate codes,
+dangling or self references, cycles, empty groups, duplicate direct branches,
+or excessive prerequisite depth and size.
+
+The current source is a documented hand-authored fixture, not upstream U of T
+data. See [fixture provenance](docs/fixture-catalog.md).
+
 ## Limitations
 
 - Catalog content is a small fixture and may be outdated or incomplete.
+- Catalog version 1 has validation but not migration or snapshot-to-snapshot
+  change detection yet.
 - The requirement fixture is not an official degree audit. Exclusions,
   co-requisites, transfer credits, enrollment capacity, and calendar-year rules
   are not modeled.
