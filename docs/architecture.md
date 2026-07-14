@@ -172,6 +172,28 @@ plan. The skip link is also verified to move keyboard focus to the main landmark
 This is a regression gate, not a WCAG conformance claim: manual screen-reader,
 zoom, reflow, contrast, and cross-browser checks remain release work.
 
+### ADR-009: the offline shell is generated, versioned, and user-updated
+
+**Status:** accepted.
+
+The service worker is generated after the production build so its precache list
+contains the exact hashed JavaScript and CSS assets plus manifest and icons. A
+SHA-256 digest of filenames and contents supplies a deterministic cache version.
+Install fails atomically if any shell response cannot be cached. Activation
+deletes only older names under the `campusflow-shell-` prefix.
+
+Navigation is network-first, with cached navigation, `index.html`, and root shell
+fallbacks in that order. Same-origin scripts, styles, images, fonts, and the
+manifest are cache-first; non-GET and cross-origin requests bypass the worker.
+This prevents the offline feature from becoming an unexpected data proxy.
+
+A new worker does not call `skipWaiting` during installation. When a controlled
+page detects a waiting worker, it presents an accessible update action; only
+that action sends `SKIP_WAITING`, and the page reloads once after
+`controllerchange`. The first offline visit cannot succeed until an online load
+has installed the shell. Local-storage plan lifecycle remains separate from
+cache lifecycle, though clearing all site data removes both.
+
 ## Data and threat model
 
 The plan contains term labels and course codes. It is user-controlled data and
@@ -188,7 +210,6 @@ malicious browser extensions are outside this application's control.
 
 ## Near-term evolution
 
-The next architecture milestone makes the local-first application installable
-as a progressive web app without weakening update safety or offline behavior.
-Any live academic data must show its source and retrieval date and must never be
-presented as official advising.
+The next architecture milestone deploys immutable previews with post-deployment
+smoke checks and an explicit rollback path. Any live academic data must show its
+source and retrieval date and must never be presented as official advising.

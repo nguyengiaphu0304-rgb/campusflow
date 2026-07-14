@@ -28,6 +28,6 @@
 
 - [x] End-to-end browser tests for portable plan and keyboard workflows
 - [x] Performance and accessibility budgets
-- [ ] Installable progressive web app
+- [x] Installable progressive web app
 - [ ] Deployment with preview checks
 - [ ] Release notes, demo walkthrough, and polished screenshots
