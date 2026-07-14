@@ -194,6 +194,31 @@ that action sends `SKIP_WAITING`, and the page reloads once after
 has installed the shell. Local-storage plan lifecycle remains separate from
 cache lifecycle, though clearing all site data removes both.
 
+### ADR-010: Pages deploys one verified artifact through a trust boundary
+
+**Status:** accepted.
+
+Production uses Vite's explicit `/campusflow/` base. Pull requests build that
+same repository-scoped output, enforce size budgets, reject missing files and
+root-relative leaks, and upload it with the official Pages artifact action. They
+cannot deploy. Trusted `main` and manual runs pass the already-built artifact to
+GitHub Pages using its OIDC token exchange; the deploy job has only read access
+to contents plus `pages: write` and `id-token: write`. Deployments are serialized
+so an older run cannot race a newer artifact into production.
+
+The generated HTML contains a restrictive CSP meta policy because GitHub Pages
+does not expose project-controlled HTTP response headers. This controls the
+app's script, style, image, connection, manifest, worker, form, object, and base
+sources, but is deliberately not represented as equivalent to a response-header
+policy. Directives unsupported in meta CSP are not claimed.
+
+After publication, a bounded retry smoke test fetches the public document,
+manifest, worker, and every same-scope HTML asset, checking status and media
+types. This catches propagation errors and broken base paths but is not synthetic
+monitoring or an availability guarantee. Rollback is an auditable revert on
+`main`, followed by the same CI and deployment path; old mutable artifacts are
+never promoted out of band.
+
 ## Data and threat model
 
 The plan contains term labels and course codes. It is user-controlled data and
@@ -210,6 +235,6 @@ malicious browser extensions are outside this application's control.
 
 ## Near-term evolution
 
-The next architecture milestone deploys immutable previews with post-deployment
-smoke checks and an explicit rollback path. Any live academic data must show its
-source and retrieval date and must never be presented as official advising.
+The remaining release milestone packages truthful release notes, a repeatable
+demo, and repository screenshots. Any live academic data must show its source
+and retrieval date and must never be presented as official advising.

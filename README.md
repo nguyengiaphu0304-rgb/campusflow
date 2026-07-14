@@ -60,6 +60,11 @@ npm run dev
 Open the local URL printed by Vite. No environment variables or external
 services are required.
 
+The configured deployment target is
+[nguyengiaphu0304-rgb.github.io/campusflow](https://nguyengiaphu0304-rgb.github.io/campusflow/).
+It is generated from `main`; pull requests upload the same deploy-shaped artifact
+for inspection but cannot publish it.
+
 ## Verification
 
 Run the same checks enforced by CI:
@@ -70,6 +75,7 @@ npm run typecheck
 npm test
 npm run build
 npm run budget
+npm run check:deployment
 npm run audit
 ```
 
@@ -121,6 +127,28 @@ manual screen-reader, zoom, reflow, keyboard, or assistive-input testing.
 10. Install CampusFlow from the browser, reload it once online, then enable
     offline mode and reload again; the application shell and local plan remain
     available.
+
+## Deployment and rollback
+
+The Pages workflow builds with `CAMPUSFLOW_BASE_PATH=/campusflow/`, rejects any
+HTML asset reference that escapes that repository scope, applies the same bundle
+budgets, and uploads the exact `dist` directory as an immutable workflow
+artifact. Deployment is limited to `main` or an explicit manual run. The deploy
+job has only `contents: read`, `pages: write`, and `id-token: write`; concurrent
+publications are serialized. A final smoke job retries normal Pages propagation,
+then fetches the HTML, manifest, service worker, and every same-scope shell asset.
+
+GitHub Pages does not let this repository set arbitrary HTTP response headers.
+The document therefore carries a restrictive CSP meta policy, which is useful
+defense in depth but is not equivalent to a header-delivered policy and does not
+support every CSP directive. Do not describe the host as having project-defined
+security headers.
+
+To roll back a faulty release, revert its merge commit on `main` through a new
+pull request. The normal CI and Pages checks then build and deploy that explicit
+revert, retaining review history instead of mutating an old deployment. If the
+live smoke job fails, treat the release as incomplete and inspect its run before
+retrying; never point users at a locally built artifact as production.
 
 ## Progressive web app behavior
 
@@ -185,6 +213,8 @@ change while operator type and nesting remain meaningful.
 - Offline use requires one successful online production visit and service-worker
   installation first. Clearing site data removes both cached shell files and the
   locally stored plan.
+- Hosting is static GitHub Pages. The CSP is delivered by HTML meta rather than
+  an HTTP header, and no custom response-header guarantees are claimed.
 
 ## License
 

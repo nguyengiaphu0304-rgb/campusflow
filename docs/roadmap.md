@@ -29,5 +29,5 @@
 - [x] End-to-end browser tests for portable plan and keyboard workflows
 - [x] Performance and accessibility budgets
 - [x] Installable progressive web app
-- [ ] Deployment with preview checks
+- [x] Deployment with preview artifact checks and live smoke verification
 - [ ] Release notes, demo walkthrough, and polished screenshots
