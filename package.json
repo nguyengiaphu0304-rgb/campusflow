@@ -12,6 +12,7 @@
     "dev": "vite",
     "preview": "vite preview",
     "build": "tsc --noEmit && vite build && node scripts/build-pwa.mjs dist",
+    "check:deployment": "node scripts/check-deployment.mjs dist",
     "lint": "eslint . --max-warnings 0",
     "test": "vitest run src && node --test scripts/*.test.mjs",
     "test:e2e": "playwright test",
