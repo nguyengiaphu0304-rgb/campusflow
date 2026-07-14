@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { CourseCatalog } from "./components/CourseCatalog";
 import { PlanBoard } from "./components/PlanBoard";
+import { PlanTransfer } from "./components/PlanTransfer";
 import { PrerequisiteGraph } from "./components/PrerequisiteGraph";
 import { demoCourses, demoTerms } from "./data/demoCourses";
 import type { AcademicTerm } from "./domain/plan";
@@ -101,6 +102,11 @@ export default function App() {
                 Reset demo
               </button>
             </div>
+            <PlanTransfer
+              catalog={demoCourses}
+              terms={terms}
+              onImport={setTerms}
+            />
           </div>
           <div className="hero-stats" aria-label="Plan summary">
             <div><strong>{scheduled.size}</strong><span>courses mapped</span></div>
