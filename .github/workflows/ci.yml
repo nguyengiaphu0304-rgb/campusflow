@@ -32,6 +32,8 @@ jobs:
         run: npm test
       - name: Build
         run: npm run build
+      - name: Enforce production asset budgets
+        run: npm run budget
 
   browser:
     needs: verify

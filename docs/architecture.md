@@ -154,6 +154,24 @@ ignored, while operator type and nesting remain significant. Both bundled
 snapshots are documented synthetic fixtures; their differences do not represent
 historical U of T calendar changes.
 
+### ADR-008: release budgets are deterministic gates, not performance claims
+
+**Status:** accepted.
+
+The production build is measured from committed tooling with no hosted service.
+Every generated HTML, CSS, and JavaScript asset is checked in raw bytes and with
+level-9 gzip. JavaScript is capped at 250 KiB raw and 80 KiB gzip per asset, CSS
+at 20 KiB raw and 6 KiB gzip per asset, and the measured initial artifact at
+280 KiB raw and 90 KiB gzip. HTML has an additional 4 KiB raw and 2 KiB gzip
+cap. The current build has deliberate headroom without making large regressions
+invisible. Missing HTML, CSS, or JavaScript output fails closed.
+
+Accessibility has a zero-violation automated budget for axe rules tagged WCAG
+2.0/2.1 A or AA. It runs on the initial page and after importing a populated
+plan. The skip link is also verified to move keyboard focus to the main landmark.
+This is a regression gate, not a WCAG conformance claim: manual screen-reader,
+zoom, reflow, contrast, and cross-browser checks remain release work.
+
 ## Data and threat model
 
 The plan contains term labels and course codes. It is user-controlled data and
@@ -170,6 +188,7 @@ malicious browser extensions are outside this application's control.
 
 ## Near-term evolution
 
-The next architecture milestone establishes measurable performance and
-accessibility budgets before deployment. Any live academic data must show its
-source and retrieval date and must never be presented as official advising.
+The next architecture milestone makes the local-first application installable
+as a progressive web app without weakening update safety or offline behavior.
+Any live academic data must show its source and retrieval date and must never be
+presented as official advising.

@@ -8,11 +8,12 @@
   },
   "scripts": {
     "audit": "npm audit --audit-level=high",
+    "budget": "node scripts/check-budgets.mjs dist",
     "dev": "vite",
     "preview": "vite preview",
     "build": "tsc --noEmit && vite build",
     "lint": "eslint . --max-warnings 0",
-    "test": "vitest run src",
+    "test": "vitest run src && node --test scripts/*.test.mjs",
     "test:e2e": "playwright test",
     "typecheck": "tsc --noEmit"
   },

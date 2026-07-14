@@ -27,7 +27,7 @@
 ## v1.0 · Portfolio-ready release
 
 - [x] End-to-end browser tests for portable plan and keyboard workflows
-- [ ] Performance and accessibility budgets
+- [x] Performance and accessibility budgets
 - [ ] Installable progressive web app
 - [ ] Deployment with preview checks
 - [ ] Release notes, demo walkthrough, and polished screenshots
