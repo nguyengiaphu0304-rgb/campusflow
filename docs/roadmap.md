@@ -21,7 +21,7 @@
 
 - [x] Versioned catalog snapshot schema
 - [x] Source attribution and retrieval timestamps
-- [ ] Change detection between catalog versions
+- [x] Change detection between catalog versions
 - [x] Validation for dangling references and contradictory rules
 
 ## v1.0 · Portfolio-ready release

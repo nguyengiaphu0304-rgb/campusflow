@@ -1,16 +1,22 @@
 import type { AcademicTerm } from "../domain/plan";
 import { parseCatalogSnapshot } from "../domain/catalogSnapshot";
 import rawCatalogSnapshot from "./catalog.v1.json";
+import rawPreviousCatalogSnapshot from "./catalog.previous.v1.json";
 
-const parsedCatalog = parseCatalogSnapshot(rawCatalogSnapshot);
-if (!parsedCatalog.ok) {
-  const details = parsedCatalog.issues
+function loadBundledCatalog(value: unknown, label: string) {
+  const result = parseCatalogSnapshot(value);
+  if (result.ok) return result.snapshot;
+  const details = result.issues
     .map((issue) => `${issue.path}: ${issue.message}`)
     .join("; ");
-  throw new Error(`Bundled catalog snapshot is invalid: ${details}`);
+  throw new Error(`Bundled ${label} catalog snapshot is invalid: ${details}`);
 }
 
-export const demoCatalogSnapshot = parsedCatalog.snapshot;
+export const demoCatalogSnapshot = loadBundledCatalog(rawCatalogSnapshot, "current");
+export const demoPreviousCatalogSnapshot = loadBundledCatalog(
+  rawPreviousCatalogSnapshot,
+  "previous",
+);
 export const demoCourses = demoCatalogSnapshot.courses;
 
 export const demoTerms: AcademicTerm[] = [

@@ -16,6 +16,11 @@ deliberately incomplete and may not match any current academic calendar.
 - Intended use: deterministic development, automated testing, and UI demos
 - Prohibited interpretation: official academic advice or a complete degree audit
 
+`src/data/catalog.previous.v1.json` is a second synthetic state used only to
+demonstrate snapshot comparison. Its additions, removals, credit changes, and
+prerequisite changes were deliberately invented for deterministic tests. They
+must not be interpreted as changes made by U of T.
+
 Any future real catalog snapshot must use a direct source URL, an honest
 retrieval timestamp, documented transformation steps, and terms that permit its
 redistribution. It must pass the same structural and semantic validation before
