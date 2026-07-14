@@ -1,0 +1,19 @@
+{
+  "schema": "campusflow-plan",
+  "version": 1,
+  "exportedAt": "2026-07-14T00:00:00.000Z",
+  "plan": {
+    "terms": [
+      {
+        "id": "focused-fall",
+        "label": "Focused Fall",
+        "courses": ["CSC148H1"]
+      },
+      {
+        "id": "focused-winter",
+        "label": "Focused Winter",
+        "courses": ["CSC207H1"]
+      }
+    ]
+  }
+}
