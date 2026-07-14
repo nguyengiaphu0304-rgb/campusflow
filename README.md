@@ -68,6 +68,7 @@ npm run lint
 npm run typecheck
 npm test
 npm run build
+npm run budget
 npm run audit
 ```
 
@@ -79,6 +80,13 @@ snapshot differences. The
 dependency audit fails on high or critical known
 vulnerabilities.
 
+The production build also fails if any JavaScript asset exceeds 250 KiB raw or
+80 KiB gzip, any CSS asset exceeds 20 KiB raw or 6 KiB gzip, or the measured
+HTML/CSS/JS total exceeds 280 KiB raw or 90 KiB gzip. The checker reports every
+asset and uses deterministic level-9 gzip locally and in CI. These artifact
+budgets prevent silent bundle growth; they are not claims about runtime speed on
+a particular device or network.
+
 Browser tests use Playwright with Chromium. Install its browser once, then run:
 
 ```bash
@@ -88,8 +96,10 @@ npm run test:e2e
 
 The suite drives real downloads, file selection, pointer and keyboard term
 reordering, verifies atomic failure and persistence behavior, checks keyboard
-focus, and runs axe against WCAG 2.0/2.1 A and AA rules. CI installs Chromium
-with its Linux system dependencies automatically.
+focus, and requires zero axe violations against WCAG 2.0/2.1 A and AA rules on
+both the initial page and an interaction-populated plan. CI installs Chromium
+with its Linux system dependencies automatically. Automated rules do not replace
+manual screen-reader, zoom, reflow, keyboard, or assistive-input testing.
 
 ## Demo walkthrough
 

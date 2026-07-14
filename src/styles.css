@@ -25,6 +25,7 @@ a { color: inherit; }
 
 .skip-link { position: fixed; z-index: 20; top: 1rem; left: 1rem; padding: .75rem 1rem; transform: translateY(-180%); background: var(--accent); color: #08111f; border-radius: .5rem; font-weight: 800; }
 .skip-link:focus { transform: translateY(0); }
+main:focus { outline: 3px solid var(--accent); outline-offset: .35rem; }
 .site-header { max-width: 1440px; margin: 0 auto; padding: 1.4rem clamp(1rem, 4vw, 4rem); display: flex; align-items: center; justify-content: space-between; }
 .brand { display: flex; align-items: center; gap: .7rem; text-decoration: none; font-weight: 800; letter-spacing: -.02em; }
 .brand-mark { display: grid; place-items: center; width: 2.25rem; aspect-ratio: 1; border-radius: .75rem; background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #07141b; font-size: .78rem; box-shadow: 0 10px 30px rgba(79, 226, 193, .2); }

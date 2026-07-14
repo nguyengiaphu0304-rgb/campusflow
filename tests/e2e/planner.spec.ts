@@ -109,6 +109,13 @@ test("exposes visible keyboard focus for the backup controls", async ({ page }) 
   ).not.toBe("none");
 });
 
+test("moves focus to the main landmark through the skip link", async ({ page }) => {
+  await page.keyboard.press("Tab");
+  await page.getByRole("link", { name: "Skip to planner" }).press("Enter");
+  await expect(page.locator("main")).toBeFocused();
+  await expect(page).toHaveURL(/#main-content$/);
+});
+
 test("renders a minimum-change suggestion for an invalid sequence", async ({
   page,
 }) => {
@@ -195,19 +202,27 @@ test("reorders a term with the pointer drag handle", async ({ page }) => {
   );
 });
 
-test("has no serious or critical automated accessibility violations", async ({
+test("stays within the zero-violation WCAG A and AA budget", async ({
   page,
 }) => {
-  const results = await new AxeBuilder({ page })
-    .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
-    .analyze();
-  const violations = results.violations
-    .filter(({ impact }) => impact === "serious" || impact === "critical")
-    .map(({ id, impact, nodes }) => ({
+  async function violations() {
+    const results = await new AxeBuilder({ page })
+      .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
+      .analyze();
+    return results.violations.map(({ id, impact, nodes }) => ({
       id,
       impact,
       targets: nodes.map((node) => node.target),
     }));
+  }
 
-  expect(violations).toEqual([]);
+  expect(await violations()).toEqual([]);
+
+  await page
+    .getByLabel("Choose a CampusFlow JSON plan to import")
+    .setInputFiles(path.join(process.cwd(), "tests/fixtures/focused-plan.json"));
+  await expect(page.getByRole("status", { name: "Plan transfer status" })).toHaveText(
+    "Imported 2 terms successfully.",
+  );
+  expect(await violations()).toEqual([]);
 });

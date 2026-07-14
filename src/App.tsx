@@ -99,7 +99,7 @@ export default function App() {
         <span className="privacy-note">Local-first · no account required</span>
       </header>
 
-      <main id="main-content">
+      <main id="main-content" tabIndex={-1}>
         <section className="hero" id="top">
           <div className="hero-copy">
             <p className="eyebrow">Plan beyond the next semester</p>
