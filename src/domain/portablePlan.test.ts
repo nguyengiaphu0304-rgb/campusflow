@@ -65,8 +65,13 @@ describe("portable plan files", () => {
   });
 
   it("rejects unknown and duplicate course codes", () => {
-    const unknown = [{ ...terms[0], courses: ["CSC999H1"] }];
-    const duplicate = [terms[0], { ...terms[1], courses: ["CSC108H1"] }];
+    const unknown: AcademicTerm[] = [
+      { id: "fall-2026", label: "Fall 2026", courses: ["CSC999H1"] },
+    ];
+    const duplicate: AcademicTerm[] = [
+      terms[0]!,
+      { ...terms[1]!, courses: ["CSC108H1"] },
+    ];
 
     expect(parsePlan(serializePlan(unknown), knownCourses)).toEqual({
       ok: false,
