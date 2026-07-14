@@ -1,0 +1,35 @@
+.plan-transfer {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0 .25rem;
+  margin-top: .35rem;
+}
+
+.plan-transfer .text-button {
+  padding-inline: .65rem;
+  color: var(--muted);
+  font-size: .78rem;
+}
+
+.transfer-status {
+  flex-basis: 100%;
+  margin: .3rem .65rem 0;
+  font-size: .76rem;
+  line-height: 1.45;
+}
+
+.transfer-status.success { color: var(--accent-2); }
+.transfer-status.error { color: var(--warning); }
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
