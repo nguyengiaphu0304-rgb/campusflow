@@ -39,7 +39,7 @@ export function serializePlan(
     schema: PLAN_FILE_SCHEMA,
     version: PLAN_FILE_VERSION,
     exportedAt: exportedAt.toISOString(),
-    plan: { terms: structuredClone(terms) },
+    plan: {\n      terms: terms.map((term) => ({\n        ...term,\n        courses: [...term.courses],\n      })),\n    },
   };
 
   return `${JSON.stringify(document, null, 2)}\n`;
