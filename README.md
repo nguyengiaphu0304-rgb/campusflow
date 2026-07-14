@@ -24,6 +24,7 @@ explicitly exports it.
 - Evaluate nested `all`/`any` prerequisite expressions.
 - Reject same-term prerequisites, duplicates, unknown courses, and catalog cycles.
 - Explain each conflict with a deterministic minimum-change repair suggestion.
+- Evaluate compositional course and credit requirement groups with live progress.
 - Visualize the transitive prerequisite graph.
 - Persist a draft in browser local storage.
 - Export and transactionally import a versioned JSON backup.
@@ -68,8 +69,9 @@ npm run audit
 ```
 
 Tests cover prerequisite semantics, graph traversal and cycles, plan validation,
-portable-file round trips, and malformed, oversized, unsupported, duplicate,
-and unknown import data. The dependency audit fails on high or critical known
+portable-file round trips, malformed, oversized, unsupported, duplicate, and
+unknown import data, and degree-rule alternatives, credit selectors, ties, and
+boundary cases. The dependency audit fails on high or critical known
 vulnerabilities.
 
 Browser tests use Playwright with Chromium. Install its browser once, then run:
@@ -91,6 +93,8 @@ rules. CI installs Chromium with its Linux system dependencies automatically.
 4. Export the plan, remove a course, then import the JSON file to restore it.
 5. Edit the JSON schema version or a course code and import again; CampusFlow
    reports the error without replacing the current plan.
+6. Compare the illustrative requirement groups before and after the plan changes;
+   the closest permitted path explains what remains.
 
 For a portfolio screenshot, use a 1440 × 900 viewport with the planner and graph
 visible. The repository does not include fabricated screenshots or usage claims.
@@ -106,8 +110,11 @@ closed until a migration is deliberately implemented.
 ## Limitations
 
 - Catalog content is a small fixture and may be outdated or incomplete.
-- Degree requirements, exclusions, co-requisites, transfer credits, and
-  enrollment capacity are not yet modeled.
+- The requirement fixture is not an official degree audit. Exclusions,
+  co-requisites, transfer credits, enrollment capacity, and calendar-year rules
+  are not modeled.
+- Courses may count in multiple independent progress groups. Cross-group credit
+  allocation and optimization are deliberately outside the current model.
 - The graph is designed for the fixture scale and has not been performance-tested
   against the full calendar.
 - Local storage is device- and browser-specific; exported files are not encrypted.

@@ -1,9 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { CourseCatalog } from "./components/CourseCatalog";
+import { DegreeProgress } from "./components/DegreeProgress";
 import { PlanBoard } from "./components/PlanBoard";
 import { PlanTransfer } from "./components/PlanTransfer";
 import { PrerequisiteGraph } from "./components/PrerequisiteGraph";
 import { demoCourses, demoTerms } from "./data/demoCourses";
+import { demoProgram } from "./data/demoProgram";
 import type { AcademicTerm } from "./domain/plan";
 import { totalCredits, validatePlan } from "./domain/plan";
 
@@ -135,6 +137,8 @@ export default function App() {
             onRemove={removeCourse}
           />
         </section>
+
+        <DegreeProgress catalog={demoCourses} terms={terms} program={demoProgram} />
 
         <PrerequisiteGraph catalog={demoCourses} selected={scheduled} />
       </main>
