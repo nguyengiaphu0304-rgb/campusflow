@@ -102,6 +102,7 @@ export function PlanTransfer({
         <span
           className={`transfer-status ${status.kind}`}
           role={status.kind === "error" ? "alert" : "status"}
+          aria-label="Plan transfer status"
         >
           {status.message}
         </span>

@@ -29,7 +29,7 @@ test("exports the current plan as a valid portable document", async ({
   expect(exported.version).toBe(1);
   expect(exported.plan.terms).toHaveLength(4);
   expect(exported.plan.terms[0]?.courses).toContain("CSC110Y1");
-  await expect(page.getByRole("status")).toHaveText(
+  await expect(page.getByRole("status", { name: "Plan transfer status" })).toHaveText(
     "Plan exported as a JSON file.",
   );
 });
@@ -44,7 +44,7 @@ test("imports atomically and preserves the plan after an invalid file", async ({
     path.join(process.cwd(), "tests/fixtures/focused-plan.json"),
   );
 
-  await expect(page.getByRole("status")).toHaveText(
+  await expect(page.getByRole("status", { name: "Plan transfer status" })).toHaveText(
     "Imported 2 terms successfully.",
   );
   await expect(page.getByRole("heading", { name: "Focused Fall" })).toBeVisible();

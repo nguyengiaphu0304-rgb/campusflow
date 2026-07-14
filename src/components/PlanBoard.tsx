@@ -19,8 +19,8 @@ export function PlanBoard({
 }: PlanBoardProps) {
   const catalogByCode = new Map(catalog.map((item) => [item.code, item]));
   const [announcement, setAnnouncement] = useState("");
-  const [draggingTermId, setDraggingTermId] = useState<string | null>(null);
   const [dragTargetId, setDragTargetId] = useState<string | null>(null);
+  const draggingTermId = useRef<string | null>(null);
   const moveButtonRefs = useRef(new Map<string, HTMLButtonElement>());
 
   function announceMove(termId: string, destinationIndex: number): void {
@@ -47,14 +47,14 @@ export function PlanBoard({
   function startDrag(event: DragEvent<HTMLElement>, termId: string): void {
     event.dataTransfer.effectAllowed = "move";
     event.dataTransfer.setData("text/plain", termId);
-    setDraggingTermId(termId);
+    draggingTermId.current = termId;
   }
 
   function dropTerm(event: DragEvent<HTMLElement>, destinationIndex: number): void {
     event.preventDefault();
-    const termId = draggingTermId ?? event.dataTransfer.getData("text/plain");
+    const termId = draggingTermId.current ?? event.dataTransfer.getData("text/plain");
     announceMove(termId, destinationIndex);
-    setDraggingTermId(null);
+    draggingTermId.current = null;
     setDragTargetId(null);
   }
 
@@ -77,10 +77,14 @@ export function PlanBoard({
             data-term-id={term.id}
             key={term.id}
             onDragEnter={() => {
-              if (draggingTermId && draggingTermId !== term.id) setDragTargetId(term.id);
+              if (draggingTermId.current && draggingTermId.current !== term.id) {
+                setDragTargetId(term.id);
+              }
             }}
             onDragOver={(event) => {
-              if (draggingTermId && draggingTermId !== term.id) event.preventDefault();
+              if (draggingTermId.current && draggingTermId.current !== term.id) {
+                event.preventDefault();
+              }
             }}
             onDrop={(event) => dropTerm(event, index)}
           >
@@ -119,7 +123,7 @@ export function PlanBoard({
                   aria-hidden="true"
                   onDragStart={(event) => startDrag(event, term.id)}
                   onDragEnd={() => {
-                    setDraggingTermId(null);
+                    draggingTermId.current = null;
                     setDragTargetId(null);
                   }}
                 >
