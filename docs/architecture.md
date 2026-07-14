@@ -8,7 +8,8 @@ backend so a student's draft plan never leaves the browser.
 
 - `src/domain`: prerequisite expressions, graph construction, cycle detection,
   transitive closure, term validation, credit calculations, and the portable-plan
-  codec. It has no React dependency and is covered by unit tests.
+  codec, plus compositional degree requirement evaluation. It has no React
+  dependency and is covered by unit tests.
 - `src/data`: a small illustrative catalog fixture. It is not official academic
   data and is labelled accordingly in both source and UI.
 - `src/components`: accessible presentation and interaction components.
@@ -69,6 +70,27 @@ work. Final equal-cost options are sorted lexicographically, making suggestions
 stable across runs. This can be exponential for adversarial expression trees,
 so it is appropriate for bounded catalog rules but not a general-purpose degree
 optimizer. Suggestions never mutate state and cover only modeled prerequisites.
+
+### ADR-004: degree progress uses compositional, independently evaluated groups
+
+**Status:** accepted.
+
+Degree requirements use a separate rule tree with required-course, credit,
+`all`, and `any` nodes. Credit nodes select catalog courses by explicit code or
+breadth label. Planned codes are deduplicated and unknown codes contribute no
+credit. This gives the UI one deterministic evaluator without coupling policy to
+React or treating display copy as executable logic.
+
+For `any`, the evaluator presents the branch with the greatest completion
+fraction, then the fewest missing items, then source order. Empty `all` rules are
+vacuously complete; empty `any` rules fail explicitly. Each top-level group is
+independent, so a course may contribute to more than one group. Global credit
+allocation is a distinct optimization problem and is not implied by this model.
+
+The bundled program is intentionally illustrative and labelled as such in data,
+UI, and documentation. It must not be used as an official degree audit. A future
+catalog pipeline would need versioned, source-attributed program rules before
+real academic requirements could be represented responsibly.
 
 ## Data and threat model
 

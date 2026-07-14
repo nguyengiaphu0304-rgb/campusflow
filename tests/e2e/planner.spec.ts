@@ -110,6 +110,19 @@ test("renders a minimum-change suggestion for an invalid sequence", async ({
   ).toBeVisible();
 });
 
+test("updates degree progress and explains remaining work after import", async ({ page }) => {
+  await expect(page.getByRole("heading", { name: "Degree progress" })).toBeVisible();
+  await expect(page.getByText("3 of 3 groups complete")).toBeVisible();
+
+  await page
+    .getByLabel("Choose a CampusFlow JSON plan to import")
+    .setInputFiles(path.join(process.cwd(), "tests/fixtures/focused-plan.json"));
+
+  await expect(page.getByText("1 of 3 groups complete")).toBeVisible();
+  await expect(page.getByText("Plan 1.0 more eligible credits.")).toBeVisible();
+  await expect(page.getByText("Plan 2.0 more eligible credits.")).toBeVisible();
+});
+
 test("has no serious or critical automated accessibility violations", async ({
   page,
 }) => {
