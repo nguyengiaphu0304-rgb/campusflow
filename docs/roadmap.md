@@ -15,7 +15,7 @@
 - [ ] Degree requirement rules and progress groups
 - [x] Import/export of a portable, versioned plan file
 - [ ] Conflict explanations that identify the smallest corrective action
-- [ ] Component-level accessibility tests
+- [x] Automated browser accessibility tests for serious and critical violations
 
 ## v0.3 · Trustworthy catalog ingestion
 
@@ -26,7 +26,7 @@
 
 ## v1.0 · Portfolio-ready release
 
-- [ ] End-to-end browser tests
+- [x] End-to-end browser tests for portable plan and keyboard workflows
 - [ ] Performance and accessibility budgets
 - [ ] Installable progressive web app
 - [ ] Deployment with preview checks

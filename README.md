@@ -63,11 +63,24 @@ npm run lint
 npm run typecheck
 npm test
 npm run build
+npm run audit
 ```
 
 Tests cover prerequisite semantics, graph traversal and cycles, plan validation,
 portable-file round trips, and malformed, oversized, unsupported, duplicate,
-and unknown import data.
+and unknown import data. The dependency audit fails on high or critical known
+vulnerabilities.
+
+Browser tests use Playwright with Chromium. Install its browser once, then run:
+
+```bash
+npx playwright install chromium
+npm run test:e2e
+```
+
+The suite drives real downloads and file selection, verifies atomic failure
+behavior, checks keyboard focus, and runs axe against WCAG 2.0/2.1 A and AA
+rules. CI installs Chromium with its Linux system dependencies automatically.
 
 ## Demo walkthrough
 
@@ -97,8 +110,8 @@ closed until a migration is deliberately implemented.
 - The graph is designed for the fixture scale and has not been performance-tested
   against the full calendar.
 - Local storage is device- and browser-specific; exported files are not encrypted.
-- Automated component accessibility and end-to-end browser tests remain roadmap
-  items.
+- Automated accessibility checks find many common defects but do not replace
+  manual screen-reader, zoom, contrast, and keyboard testing.
 
 ## License
 
