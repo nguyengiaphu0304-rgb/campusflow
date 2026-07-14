@@ -19,10 +19,10 @@
 
 ## v0.3 · Trustworthy catalog ingestion
 
-- [ ] Versioned catalog snapshot schema
-- [ ] Source attribution and retrieval timestamps
+- [x] Versioned catalog snapshot schema
+- [x] Source attribution and retrieval timestamps
 - [ ] Change detection between catalog versions
-- [ ] Validation for dangling references and contradictory rules
+- [x] Validation for dangling references and contradictory rules
 
 ## v1.0 · Portfolio-ready release
 

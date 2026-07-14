@@ -1,10 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { CourseCatalog } from "./components/CourseCatalog";
+import { CatalogProvenance } from "./components/CatalogProvenance";
 import { DegreeProgress } from "./components/DegreeProgress";
 import { PlanBoard } from "./components/PlanBoard";
 import { PlanTransfer } from "./components/PlanTransfer";
 import { PrerequisiteGraph } from "./components/PrerequisiteGraph";
-import { demoCourses, demoTerms } from "./data/demoCourses";
+import { demoCatalogSnapshot, demoCourses, demoTerms } from "./data/demoCourses";
 import { demoProgram } from "./data/demoProgram";
 import type { AcademicTerm } from "./domain/plan";
 import { moveTerm, totalCredits, validatePlan } from "./domain/plan";
@@ -121,11 +122,7 @@ export default function App() {
           </div>
         </section>
 
-        <div className="data-notice" role="note">
-          <strong>Demo catalog:</strong> course information is illustrative and is
-          not official academic advice. Always verify requirements in the current
-          University of Toronto Academic Calendar.
-        </div>
+        <CatalogProvenance snapshot={demoCatalogSnapshot} />
 
         <section className="workspace" id="planner" aria-label="Course planning workspace">
           <CourseCatalog

@@ -8,10 +8,11 @@ backend so a student's draft plan never leaves the browser.
 
 - `src/domain`: prerequisite expressions, graph construction, cycle detection,
   transitive closure, term validation, credit calculations, and the portable-plan
-  codec, plus compositional degree requirement evaluation. It has no React
-  dependency and is covered by unit tests.
-- `src/data`: a small illustrative catalog fixture. It is not official academic
-  data and is labelled accordingly in both source and UI.
+  codec, plus compositional degree and catalog-snapshot validation. It has no
+  React dependency and is covered by unit tests.
+- `src/data`: a versioned JSON catalog fixture parsed through the same trust
+  boundary expected for future snapshots. It is not official academic data and
+  is labelled accordingly in source, documentation, and UI.
 - `src/components`: accessible presentation and interaction components.
 - `src/App.tsx`: state orchestration and versioned local-storage persistence.
 
@@ -109,6 +110,28 @@ ARIA live announcement with pointer moves. Pointer capture keeps the drag
 lifecycle on its handle while hit-testing identifies the term under the mouse,
 pen, or touch point. Correctness and accessibility never depend on drag alone.
 
+### ADR-006: catalog snapshots fail closed at a provenance-aware boundary
+
+**Status:** accepted.
+
+Catalog JSON is treated as `unknown` and converted to `Course[]` only by a
+version-specific parser. Version 1 requires a snapshot ID, HTTPS source, UTC
+retrieval timestamp, explicit provenance note, and a bounded course collection.
+It rejects unknown keys rather than silently accepting likely schema mistakes.
+
+Structural checks cap JSON at 1 MiB and bound string lengths, course counts,
+group widths, recursive depth, and prerequisite nodes. Semantic checks reject duplicate course codes,
+dangling and self references, dependency cycles, empty groups, and duplicate
+direct branches. Errors retain JSON-style paths so an ingestion pipeline can
+report the exact rejected field. The bundled application throws during startup
+if its committed fixture fails this boundary, while CI unit tests exercise both
+valid and adversarial documents.
+
+The fixture source points to repository documentation that states it was
+hand-authored. It does not imply that U of T published, endorsed, or was queried
+for this data. Future upstream ingestion must preserve its real source, retrieval
+time, transformation record, and redistribution terms.
+
 ## Data and threat model
 
 The plan contains term labels and course codes. It is user-controlled data and
@@ -125,7 +148,6 @@ malicious browser extensions are outside this application's control.
 
 ## Near-term evolution
 
-The next architecture milestone is an import pipeline that converts versioned,
-source-attributed catalog snapshots into the domain schema. Any live academic
-data must show its source and retrieval date and must never be presented as
-official advising.
+The next architecture milestone compares two validated snapshots and explains
+added, removed, and materially changed courses. Any live academic data must show
+its source and retrieval date and must never be presented as official advising.
