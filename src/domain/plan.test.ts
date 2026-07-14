@@ -20,9 +20,14 @@ describe("plan validation", () => {
 
   it("rejects a prerequisite taken in the same term", () => {
     const terms: AcademicTerm[] = [{ id: "one", label: "One", courses: ["A", "B"] }];
-    expect(validatePlan(catalog, terms)).toEqual([
+    const issues = validatePlan(catalog, terms);
+    expect(issues).toEqual([
       expect.objectContaining({ type: "missing-prerequisite", courseCode: "B" }),
     ]);
+    expect(issues[0]?.suggestion).toEqual({
+      changeCount: 1,
+      message: "move A before One.",
+    });
   });
 
   it("reports duplicate and unknown courses", () => {
@@ -34,6 +39,25 @@ describe("plan validation", () => {
       "unknown-course",
       "duplicate-course",
     ]);
+    expect(validatePlan(catalog, terms).map((issue) => issue.suggestion.message)).toEqual([
+      "Remove NOPE, or load a catalog snapshot that contains it.",
+      "Remove this later copy of A from Two.",
+    ]);
+  });
+
+  it("explains that catalog cycles require catalog repair", () => {
+    const cyclicCatalog: Course[] = [
+      { ...catalog[0]!, prerequisites: course("B") },
+      catalog[1]!,
+    ];
+    const cycle = validatePlan(cyclicCatalog, []).find(
+      (issue) => issue.type === "catalog-cycle",
+    );
+
+    expect(cycle?.suggestion).toEqual({
+      changeCount: null,
+      message: "Review the catalog rules; plan edits cannot resolve a catalog cycle.",
+    });
   });
 
   it("counts each scheduled course once", () => {

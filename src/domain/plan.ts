@@ -4,6 +4,7 @@ import {
   isRequirementSatisfied,
 } from "./course";
 import { buildCourseGraph, findCycles } from "./graph";
+import { suggestPrerequisiteFix, type PlanSuggestion } from "./remediation";
 
 export interface AcademicTerm {
   id: string;
@@ -20,6 +21,7 @@ export interface PlanIssue {
   termId?: string;
   courseCode?: string;
   message: string;
+  suggestion: PlanSuggestion;
 }
 
 export function validatePlan(
@@ -35,10 +37,14 @@ export function validatePlan(
     issues.push({
       type: "catalog-cycle",
       message: `Catalog cycle detected: ${cycle.join(" → ")}`,
+      suggestion: {
+        changeCount: null,
+        message: "Review the catalog rules; plan edits cannot resolve a catalog cycle.",
+      },
     });
   }
 
-  for (const term of terms) {
+  for (const [termIndex, term] of terms.entries()) {
     const validThisTerm: string[] = [];
     for (const code of term.courses) {
       const item = catalogByCode.get(code);
@@ -48,6 +54,10 @@ export function validatePlan(
           termId: term.id,
           courseCode: code,
           message: `${code} is not in the loaded catalog.`,
+          suggestion: {
+            changeCount: 1,
+            message: `Remove ${code}, or load a catalog snapshot that contains it.`,
+          },
         });
         continue;
       }
@@ -58,6 +68,10 @@ export function validatePlan(
           termId: term.id,
           courseCode: code,
           message: `${code} appears more than once in the plan.`,
+          suggestion: {
+            changeCount: 1,
+            message: `Remove this later copy of ${code} from ${term.label}.`,
+          },
         });
         continue;
       }
@@ -70,6 +84,13 @@ export function validatePlan(
           termId: term.id,
           courseCode: code,
           message: `${code} requires ${describeRequirement(item.prerequisites!) } before ${term.label}.`,
+          suggestion: suggestPrerequisiteFix(
+            item.prerequisites!,
+            terms,
+            termIndex,
+            code,
+            completed,
+          ),
         });
       }
     }

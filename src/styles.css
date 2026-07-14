@@ -83,6 +83,9 @@ input:focus, select:focus, button:focus-visible, a:focus-visible, .graph-scroll:
 .empty-state { color: var(--muted); font-size: .82rem; }
 .issue-list { margin-top: .9rem; padding: .9rem 1rem; border-radius: .75rem; background: rgba(255, 202, 106, .07); color: #e1c992; font-size: .78rem; }
 .issue-list ul { margin: .5rem 0 0; padding-left: 1.1rem; line-height: 1.55; }
+.issue-list li + li { margin-top: .7rem; }
+.issue-list li > span, .issue-list small { display: block; }
+.issue-list small { margin-top: .18rem; color: #f1dfb5; font-size: .72rem; }
 .graph-panel { margin-top: 1.2rem; }
 .graph-legend { display: flex; align-items: center; gap: .4rem; color: var(--muted); background: #102234; }
 .graph-legend i { width: 1.2rem; height: 2px; background: #557086; }

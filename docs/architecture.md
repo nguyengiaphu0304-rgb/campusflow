@@ -52,6 +52,24 @@ locally and no contents are transmitted. The tradeoff is strict forward
 compatibility: a newer schema version fails clearly until an intentional
 migration is implemented.
 
+### ADR-003: repair suggestions use an explicit edit-cost model
+
+**Status:** accepted.
+
+Every added or moved course counts as one edit. For a missing prerequisite, the
+engine first looks for the earliest later term where moving the affected course
+would make the existing plan satisfy the rule. That one-edit repair is minimal.
+If the current horizon cannot satisfy the rule, the engine evaluates the nested
+prerequisite expression and returns the smallest missing course set.
+
+`all` nodes combine child alternatives by Cartesian product and set union;
+`any` nodes preserve alternative paths. Duplicate sets and strict supersets are
+pruned, but a larger intermediate set is retained when it may overlap later
+work. Final equal-cost options are sorted lexicographically, making suggestions
+stable across runs. This can be exponential for adversarial expression trees,
+so it is appropriate for bounded catalog rules but not a general-purpose degree
+optimizer. Suggestions never mutate state and cover only modeled prerequisites.
+
 ## Data and threat model
 
 The plan contains term labels and course codes. It is user-controlled data and

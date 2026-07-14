@@ -14,7 +14,7 @@
 - [ ] Drag-and-drop term sequencing with keyboard alternative
 - [ ] Degree requirement rules and progress groups
 - [x] Import/export of a portable, versioned plan file
-- [ ] Conflict explanations that identify the smallest corrective action
+- [x] Conflict explanations that identify the smallest corrective action
 - [x] Automated browser accessibility tests for serious and critical violations
 
 ## v0.3 · Trustworthy catalog ingestion

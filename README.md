@@ -23,6 +23,7 @@ explicitly exports it.
 - Search an illustrative course catalog and build a multi-term plan.
 - Evaluate nested `all`/`any` prerequisite expressions.
 - Reject same-term prerequisites, duplicates, unknown courses, and catalog cycles.
+- Explain each conflict with a deterministic minimum-change repair suggestion.
 - Visualize the transitive prerequisite graph.
 - Persist a draft in browser local storage.
 - Export and transactionally import a versioned JSON backup.
@@ -85,7 +86,7 @@ rules. CI installs Chromium with its Linux system dependencies automatically.
 ## Demo walkthrough
 
 1. Search for a course and choose a target term.
-2. Add it before its prerequisite to see a sequencing explanation.
+2. Add it before its prerequisite to see both the conflict and smallest modeled fix.
 3. Inspect the graph to trace the prerequisite closure.
 4. Export the plan, remove a course, then import the JSON file to restore it.
 5. Edit the JSON schema version or a course code and import again; CampusFlow
