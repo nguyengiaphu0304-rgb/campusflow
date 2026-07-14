@@ -124,8 +124,8 @@ closed until a migration is deliberately implemented.
 - Local storage is device- and browser-specific; exported files are not encrypted.
 - Automated accessibility checks find many common defects but do not replace
   manual screen-reader, zoom, contrast, and keyboard testing.
-- Native HTML drag-and-drop behavior varies across touch browsers. The visible
-  Earlier/Later controls provide the supported non-drag alternative.
+- Pointer drag behavior can vary with browser and assistive input combinations.
+  The visible Earlier/Later controls provide the supported non-drag alternative.
 
 ## License
 

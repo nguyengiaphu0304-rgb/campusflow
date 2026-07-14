@@ -78,7 +78,7 @@ input:focus, select:focus, button:focus-visible, a:focus-visible, .graph-scroll:
 .term-order-controls button { padding: .32rem .45rem; border: 1px solid var(--line); border-radius: .45rem; cursor: pointer; background: #10263a; color: #c7d7df; font-size: .65rem; font-weight: 750; }
 .term-order-controls button:hover:not(:disabled) { border-color: rgba(79, 226, 193, .55); color: #fff; }
 .term-order-controls button:disabled { cursor: default; opacity: .4; }
-.term-drag-handle { display: grid; place-items: center; width: 1.75rem; height: 1.75rem; border: 1px dashed rgba(143, 170, 187, .35); border-radius: .45rem; cursor: grab; color: #94aab6; user-select: none; }
+.term-drag-handle { display: grid; place-items: center; width: 1.75rem; height: 1.75rem; border: 1px dashed rgba(143, 170, 187, .35); border-radius: .45rem; cursor: grab; color: #94aab6; touch-action: none; user-select: none; }
 .term-drag-handle:active { cursor: grabbing; }
 .term-card { transition: border-color .16s ease, background-color .16s ease; }
 .term-card.drag-target { border-color: var(--accent-2); background: rgba(79, 226, 193, .08); }

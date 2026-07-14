@@ -1,4 +1,4 @@
-import { useRef, useState, type DragEvent } from "react";
+import { useRef, useState, type PointerEvent } from "react";
 import type { Course } from "../domain/course";
 import type { AcademicTerm, PlanIssue } from "../domain/plan";
 
@@ -43,24 +43,41 @@ export function PlanBoard({
     });
   }
 
-  function startDrag(event: DragEvent<HTMLElement>, termId: string): void {
-    event.dataTransfer.effectAllowed = "move";
-    event.dataTransfer.setData("text/plain", termId);
-    draggingTermId.current = termId;
-  }
-
-  function dropTerm(event: DragEvent<HTMLElement>, destinationIndex: number): void {
+  function startDrag(event: PointerEvent<HTMLElement>, termId: string): void {
+    if (event.button !== 0) return;
     event.preventDefault();
-    const termId = draggingTermId.current ?? event.dataTransfer.getData("text/plain");
-    announceMove(termId, destinationIndex);
-    draggingTermId.current = null;
-    event.currentTarget.classList.remove("drag-target");
+    draggingTermId.current = termId;
+    event.currentTarget.setPointerCapture(event.pointerId);
   }
 
   function clearDragTargets(): void {
     document.querySelectorAll(".term-card.drag-target").forEach((element) => {
       element.classList.remove("drag-target");
     });
+  }
+
+  function termAtPoint(clientX: number, clientY: number): HTMLElement | null {
+    return document.elementFromPoint(clientX, clientY)?.closest<HTMLElement>(".term-card") ?? null;
+  }
+
+  function updateDragTarget(event: PointerEvent<HTMLElement>): void {
+    const termId = draggingTermId.current;
+    if (!termId) return;
+    clearDragTargets();
+    const target = termAtPoint(event.clientX, event.clientY);
+    if (target?.dataset.termId !== termId) target?.classList.add("drag-target");
+  }
+
+  function finishDrag(event: PointerEvent<HTMLElement>): void {
+    const termId = draggingTermId.current;
+    const target = termAtPoint(event.clientX, event.clientY);
+    const destinationIndex = terms.findIndex((term) => term.id === target?.dataset.termId);
+    if (termId && destinationIndex !== -1) announceMove(termId, destinationIndex);
+    draggingTermId.current = null;
+    clearDragTargets();
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
   }
 
   return (
@@ -81,17 +98,6 @@ export function PlanBoard({
             className="term-card"
             data-term-id={term.id}
             key={term.id}
-            onDragEnter={(event) => {
-              if (draggingTermId.current && draggingTermId.current !== term.id) {
-                event.currentTarget.classList.add("drag-target");
-              }
-            }}
-            onDragLeave={(event) => event.currentTarget.classList.remove("drag-target")}
-            onDragOver={(event) => {
-              event.preventDefault();
-              event.dataTransfer.dropEffect = "move";
-            }}
-            onDrop={(event) => dropTerm(event, index)}
           >
             <div className="term-header">
               <div className="term-title">
@@ -123,11 +129,12 @@ export function PlanBoard({
                 </button>
                 <span
                   className="term-drag-handle"
-                  draggable
                   title={`Drag ${term.label} to another position`}
                   aria-hidden="true"
-                  onDragStart={(event) => startDrag(event, term.id)}
-                  onDragEnd={() => {
+                  onPointerDown={(event) => startDrag(event, term.id)}
+                  onPointerMove={updateDragTarget}
+                  onPointerUp={finishDrag}
+                  onPointerCancel={() => {
                     draggingTermId.current = null;
                     clearDragTargets();
                   }}

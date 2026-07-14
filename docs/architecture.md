@@ -102,11 +102,12 @@ positions, and identity moves return the original array reference. Moving a term
 preserves the term object and its course list; the existing derived validation,
 credit, progress, persistence, and graph views then recompute from the new order.
 
-The UI invokes this operation from native pointer drag-and-drop and visible
+The UI invokes this operation from Pointer Events drag-and-drop and visible
 Earlier/Later buttons. The buttons are the complete keyboard and touch-safe
 alternative, disable impossible moves, retain focus after a move, and share an
-ARIA live announcement with pointer moves. Native drag behavior can differ by
-touch browser, so correctness and accessibility never depend on drag alone.
+ARIA live announcement with pointer moves. Pointer capture keeps the drag
+lifecycle on its handle while hit-testing identifies the term under the mouse,
+pen, or touch point. Correctness and accessibility never depend on drag alone.
 
 ## Data and threat model
 
