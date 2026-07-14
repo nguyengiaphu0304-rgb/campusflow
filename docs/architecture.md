@@ -92,6 +92,23 @@ UI, and documentation. It must not be used as an official degree audit. A future
 catalog pipeline would need versioned, source-attributed program rules before
 real academic requirements could be represented responsibly.
 
+### ADR-005: term reordering has one pure operation and two input paths
+
+**Status:** accepted.
+
+The domain layer exposes an immutable move operation whose destination is the
+final zero-based term position. Unknown IDs, non-integer or out-of-range
+positions, and identity moves return the original array reference. Moving a term
+preserves the term object and its course list; the existing derived validation,
+credit, progress, persistence, and graph views then recompute from the new order.
+
+The UI invokes this operation from Pointer Events drag-and-drop and visible
+Earlier/Later buttons. The buttons are the complete keyboard and touch-safe
+alternative, disable impossible moves, retain focus after a move, and share an
+ARIA live announcement with pointer moves. Pointer capture keeps the drag
+lifecycle on its handle while hit-testing identifies the term under the mouse,
+pen, or touch point. Correctness and accessibility never depend on drag alone.
+
 ## Data and threat model
 
 The plan contains term labels and course codes. It is user-controlled data and

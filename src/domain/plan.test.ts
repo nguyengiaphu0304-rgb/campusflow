@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { any, course, type Course } from "./course";
 import type { AcademicTerm } from "./plan";
-import { totalCredits, validatePlan } from "./plan";
+import { moveTerm, totalCredits, validatePlan } from "./plan";
 
 const catalog: Course[] = [
   { code: "A", title: "A", description: "", credits: 0.5, breadth: "" },
@@ -66,5 +66,40 @@ describe("plan validation", () => {
       { id: "two", label: "Two", courses: ["A"] },
     ];
     expect(totalCredits(catalog, terms)).toBe(1.5);
+  });
+
+  it("moves a term forward without mutating the input", () => {
+    const terms: AcademicTerm[] = [
+      { id: "one", label: "One", courses: ["A"] },
+      { id: "two", label: "Two", courses: ["B"] },
+      { id: "three", label: "Three", courses: ["C"] },
+    ];
+    const result = moveTerm(terms, "one", 2);
+
+    expect(result.map(({ id }) => id)).toEqual(["two", "three", "one"]);
+    expect(terms.map(({ id }) => id)).toEqual(["one", "two", "three"]);
+    expect(result[2]).toBe(terms[0]);
+  });
+
+  it("moves a term backward while preserving its courses", () => {
+    const terms: AcademicTerm[] = [
+      { id: "one", label: "One", courses: ["A"] },
+      { id: "two", label: "Two", courses: ["B"] },
+      { id: "three", label: "Three", courses: ["C"] },
+    ];
+    const result = moveTerm(terms, "three", 0);
+
+    expect(result.map(({ id }) => id)).toEqual(["three", "one", "two"]);
+    expect(result[0]?.courses).toEqual(["C"]);
+  });
+
+  it("returns the original reference for invalid and identity moves", () => {
+    const terms: AcademicTerm[] = [{ id: "one", label: "One", courses: [] }];
+
+    expect(moveTerm(terms, "missing", 0)).toBe(terms);
+    expect(moveTerm(terms, "one", -1)).toBe(terms);
+    expect(moveTerm(terms, "one", 1)).toBe(terms);
+    expect(moveTerm(terms, "one", 0.5)).toBe(terms);
+    expect(moveTerm(terms, "one", 0)).toBe(terms);
   });
 });

@@ -29,7 +29,7 @@ test("exports the current plan as a valid portable document", async ({
   expect(exported.version).toBe(1);
   expect(exported.plan.terms).toHaveLength(4);
   expect(exported.plan.terms[0]?.courses).toContain("CSC110Y1");
-  await expect(page.getByRole("status")).toHaveText(
+  await expect(page.getByRole("status", { name: "Plan transfer status" })).toHaveText(
     "Plan exported as a JSON file.",
   );
 });
@@ -44,7 +44,7 @@ test("imports atomically and preserves the plan after an invalid file", async ({
     path.join(process.cwd(), "tests/fixtures/focused-plan.json"),
   );
 
-  await expect(page.getByRole("status")).toHaveText(
+  await expect(page.getByRole("status", { name: "Plan transfer status" })).toHaveText(
     "Imported 2 terms successfully.",
   );
   await expect(page.getByRole("heading", { name: "Focused Fall" })).toBeVisible();
@@ -121,6 +121,47 @@ test("updates degree progress and explains remaining work after import", async (
   await expect(page.getByText("1 of 3 groups complete")).toBeVisible();
   await expect(page.getByText("Plan 1.0 more eligible credits.")).toBeVisible();
   await expect(page.getByText("Plan 2.0 more eligible credits.")).toBeVisible();
+});
+
+test("reorders terms with keyboard controls, announces, and persists the result", async ({
+  page,
+}) => {
+  const moveLater = page.getByRole("button", { name: "Move Year 1 · Fall later" });
+  await moveLater.click();
+
+  await expect(moveLater).toBeFocused();
+  await expect(page.getByRole("status", { name: "Term reorder status" })).toHaveText(
+    "Moved Year 1 · Fall to position 2 of 4.",
+  );
+  await expect(page.locator(".term-card h3")).toHaveText([
+    "Year 1 · Winter",
+    "Year 1 · Fall",
+    "Year 2 · Fall",
+    "Year 2 · Winter",
+  ]);
+
+  await page.reload();
+  await expect(page.locator(".term-card h3")).toHaveText([
+    "Year 1 · Winter",
+    "Year 1 · Fall",
+    "Year 2 · Fall",
+    "Year 2 · Winter",
+  ]);
+  await expect(page.getByText("CSC111H1 requires", { exact: false })).toBeVisible();
+});
+
+test("reorders a term with the pointer drag handle", async ({ page }) => {
+  await page.locator(".term-drag-handle").first().dragTo(page.locator(".term-card").nth(2));
+
+  await expect(page.locator(".term-card h3")).toHaveText([
+    "Year 1 · Winter",
+    "Year 2 · Fall",
+    "Year 1 · Fall",
+    "Year 2 · Winter",
+  ]);
+  await expect(page.getByRole("status", { name: "Term reorder status" })).toHaveText(
+    "Moved Year 1 · Fall to position 3 of 4.",
+  );
 });
 
 test("has no serious or critical automated accessibility violations", async ({

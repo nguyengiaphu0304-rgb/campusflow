@@ -25,6 +25,7 @@ explicitly exports it.
 - Reject same-term prerequisites, duplicates, unknown courses, and catalog cycles.
 - Explain each conflict with a deterministic minimum-change repair suggestion.
 - Evaluate compositional course and credit requirement groups with live progress.
+- Reorder academic terms by pointer drag or equivalent Earlier/Later controls.
 - Visualize the transitive prerequisite graph.
 - Persist a draft in browser local storage.
 - Export and transactionally import a versioned JSON backup.
@@ -70,8 +71,8 @@ npm run audit
 
 Tests cover prerequisite semantics, graph traversal and cycles, plan validation,
 portable-file round trips, malformed, oversized, unsupported, duplicate, and
-unknown import data, and degree-rule alternatives, credit selectors, ties, and
-boundary cases. The dependency audit fails on high or critical known
+unknown import data, degree-rule alternatives, credit selectors, ties, and term
+reordering boundaries. The dependency audit fails on high or critical known
 vulnerabilities.
 
 Browser tests use Playwright with Chromium. Install its browser once, then run:
@@ -81,9 +82,10 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
-The suite drives real downloads and file selection, verifies atomic failure
-behavior, checks keyboard focus, and runs axe against WCAG 2.0/2.1 A and AA
-rules. CI installs Chromium with its Linux system dependencies automatically.
+The suite drives real downloads, file selection, pointer and keyboard term
+reordering, verifies atomic failure and persistence behavior, checks keyboard
+focus, and runs axe against WCAG 2.0/2.1 A and AA rules. CI installs Chromium
+with its Linux system dependencies automatically.
 
 ## Demo walkthrough
 
@@ -95,6 +97,8 @@ rules. CI installs Chromium with its Linux system dependencies automatically.
    reports the error without replacing the current plan.
 6. Compare the illustrative requirement groups before and after the plan changes;
    the closest permitted path explains what remains.
+7. Drag a term onto another position, or use its Earlier/Later buttons; notice
+   prerequisite validation update immediately and the order persist on reload.
 
 For a portfolio screenshot, use a 1440 × 900 viewport with the planner and graph
 visible. The repository does not include fabricated screenshots or usage claims.
@@ -120,6 +124,8 @@ closed until a migration is deliberately implemented.
 - Local storage is device- and browser-specific; exported files are not encrypted.
 - Automated accessibility checks find many common defects but do not replace
   manual screen-reader, zoom, contrast, and keyboard testing.
+- Pointer drag behavior can vary with browser and assistive input combinations.
+  The visible Earlier/Later controls provide the supported non-drag alternative.
 
 ## License
 

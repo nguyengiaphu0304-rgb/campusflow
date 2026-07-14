@@ -24,6 +24,28 @@ export interface PlanIssue {
   suggestion: PlanSuggestion;
 }
 
+export function moveTerm(
+  terms: AcademicTerm[],
+  termId: string,
+  destinationIndex: number,
+): AcademicTerm[] {
+  const sourceIndex = terms.findIndex((term) => term.id === termId);
+  if (
+    sourceIndex === -1 ||
+    !Number.isInteger(destinationIndex) ||
+    destinationIndex < 0 ||
+    destinationIndex >= terms.length ||
+    sourceIndex === destinationIndex
+  ) {
+    return terms;
+  }
+
+  const reordered = [...terms];
+  const [moved] = reordered.splice(sourceIndex, 1);
+  reordered.splice(destinationIndex, 0, moved!);
+  return reordered;
+}
+
 export function validatePlan(
   catalog: readonly Course[],
   terms: readonly AcademicTerm[],

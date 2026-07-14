@@ -70,9 +70,18 @@ input:focus, select:focus, button:focus-visible, a:focus-visible, .graph-scroll:
 .small-button:disabled { cursor: default; background: #1d3140; color: #7f96a3; }
 .term-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .8rem; }
 .term-card { min-height: 12rem; padding: 1rem; border: 1px solid var(--line); border-radius: .9rem; background: rgba(7, 18, 30, .55); }
-.term-header { display: flex; align-items: center; gap: .65rem; margin-bottom: .9rem; }
+.term-header { display: flex; align-items: center; justify-content: space-between; gap: .65rem; margin-bottom: .9rem; }
+.term-title { display: flex; align-items: center; gap: .65rem; min-width: 0; }
 .term-index { color: var(--accent-2); font-family: ui-monospace, monospace; font-size: .7rem; }
 .term-header h3 { margin: 0; font-size: .92rem; }
+.term-order-controls { display: flex; align-items: center; gap: .3rem; }
+.term-order-controls button { padding: .32rem .45rem; border: 1px solid var(--line); border-radius: .45rem; cursor: pointer; background: #10263a; color: #c7d7df; font-size: .65rem; font-weight: 750; }
+.term-order-controls button:hover:not(:disabled) { border-color: rgba(79, 226, 193, .55); color: #fff; }
+.term-order-controls button:disabled { cursor: default; opacity: .4; }
+.term-drag-handle { display: grid; place-items: center; width: 1.75rem; height: 1.75rem; border: 1px dashed rgba(143, 170, 187, .35); border-radius: .45rem; cursor: grab; color: #94aab6; touch-action: none; user-select: none; }
+.term-drag-handle:active { cursor: grabbing; }
+.term-card { transition: border-color .16s ease, background-color .16s ease; }
+.term-card.drag-target { border-color: var(--accent-2); background: rgba(79, 226, 193, .08); }
 .planned-courses { display: grid; gap: .45rem; margin: 0; padding: 0; list-style: none; }
 .planned-courses li { display: flex; align-items: center; justify-content: space-between; gap: .5rem; padding: .65rem .7rem; border-radius: .65rem; background: #102234; }
 .planned-courses strong, .planned-courses span { display: block; }
@@ -112,6 +121,7 @@ input:focus, select:focus, button:focus-visible, a:focus-visible, .graph-scroll:
 .graph-label { fill: #dce9ee; font-family: ui-monospace, monospace; font-size: 11px; font-weight: 800; }
 footer { max-width: 1440px; margin: 0 auto; padding: 1.5rem clamp(1rem, 4vw, 4rem) 2.5rem; display: flex; justify-content: space-between; color: #6e8490; font-size: .78rem; }
 footer a { color: #a9bac3; }
+.visually-hidden { position: absolute !important; width: 1px !important; height: 1px !important; padding: 0 !important; margin: -1px !important; overflow: hidden !important; clip: rect(0, 0, 0, 0) !important; white-space: nowrap !important; border: 0 !important; }
 
 @media (max-width: 900px) {
   .hero { min-height: auto; grid-template-columns: 1fr; gap: 2rem; padding: 4rem 0 3rem; }
@@ -131,6 +141,8 @@ footer a { color: #a9bac3; }
   .hero-stats strong { font-size: 1.6rem; }
   .catalog-controls, .term-grid { grid-template-columns: 1fr; }
   .term-card { min-height: auto; }
+  .term-header { align-items: flex-start; }
+  .term-order-controls { flex-wrap: wrap; justify-content: flex-end; }
   footer { flex-direction: column; gap: .6rem; }
 }
 
