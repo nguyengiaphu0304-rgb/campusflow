@@ -29,5 +29,10 @@
 - [x] End-to-end browser tests for portable plan and keyboard workflows
 - [x] Performance and accessibility budgets
 - [x] Installable progressive web app
-- [ ] Deployment with preview artifact checks and live smoke verification
-- [ ] Release notes, demo walkthrough, and polished screenshots
+- [x] Deployment with preview artifact checks and live smoke verification
+- [x] Release notes, demo walkthrough, and truthful production screenshots
+
+CampusFlow v1.0 is feature-complete. The
+[release checklist](release-checklist.md) records the automated evidence and
+the manual accessibility and cross-browser checks that remain unperformed; the
+release does not claim WCAG certification or official academic-advising status.

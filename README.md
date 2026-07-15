@@ -3,6 +3,10 @@
 A privacy-first University of Toronto course-planning prototype that makes
 prerequisite relationships and sequencing mistakes visible before registration.
 
+[Open the verified live application](https://nguyengiaphu0304-rgb.github.io/campusflow/)
+· [Read the v1.0 release notes](docs/releases/v1.0.0.md)
+· [Review the release evidence](docs/release-checklist.md)
+
 > **Important:** the bundled catalog is illustrative fixture data, not an
 > official or complete U of T calendar. CampusFlow is decision support, not
 > academic advice.
@@ -17,6 +21,17 @@ paths behind a course, and a multi-term validator explains invalid sequences.
 The current release is local-first. It has no account, analytics, server, or
 network persistence, so a draft plan stays in the browser unless the user
 explicitly exports it.
+
+## Product tour
+
+![CampusFlow overview showing the local-first planner summary and catalog provenance](docs/screenshots/campusflow-v1-overview.jpg)
+
+![CampusFlow planning workspace showing the searchable catalog and four-term academic plan](docs/screenshots/campusflow-v1-planner.jpg)
+
+These images were captured from the public GitHub Pages deployment on
+2026-07-15. They show the bundled illustrative fixture and demo plan, not a
+real student's information or an official U of T catalog. Follow the
+[repeatable demo walkthrough](#demo-walkthrough) to reproduce the same state.
 
 ## Current capabilities
 
@@ -44,7 +59,9 @@ keeps the decision logic independently testable and reusable.
 
 See [architecture and ADRs](docs/architecture.md) for boundaries, the data and
 threat model, and design tradeoffs. See the [scoped roadmap](docs/roadmap.md) for
-truthful release progress.
+truthful release progress. The [interview guide](docs/interview-guide.md)
+connects the implementation to concise explanations of its algorithms,
+tradeoffs, tests, and limitations.
 
 ## Local setup
 
@@ -60,10 +77,13 @@ npm run dev
 Open the local URL printed by Vite. No environment variables or external
 services are required.
 
-The configured deployment target is
+The verified deployment is
 [nguyengiaphu0304-rgb.github.io/campusflow](https://nguyengiaphu0304-rgb.github.io/campusflow/).
-It is generated from `main`; pull requests upload the same deploy-shaped artifact
-for inspection but cannot publish it.
+It is generated from `main`; pull requests upload the same deploy-shaped
+artifact for inspection but cannot publish it. The production workflow's
+build, browser, deploy, and live smoke jobs passed on 2026-07-15. See the
+[release checklist](docs/release-checklist.md) for the evidence boundary and
+manual checks that have not been performed.
 
 ## Verification
 
@@ -86,6 +106,10 @@ catalog schema limits, provenance, dangling references, cycles, and semantic
 snapshot differences. The
 dependency audit fails on high or critical known
 vulnerabilities.
+
+The current deterministic suite contains 52 domain tests and 15 build,
+deployment, budget, PWA, and smoke-script tests. Counts describe this release's
+committed tests; they are not a coverage percentage or a correctness claim.
 
 The production build also fails if any JavaScript asset exceeds 250 KiB raw or
 80 KiB gzip, any CSS asset exceeds 20 KiB raw or 6 KiB gzip, or the measured
@@ -164,8 +188,10 @@ which the page reloads once under the new version. Only caches beginning with
 code and public fixture data, never exported plan files; plan state remains in
 browser local storage.
 
-For a portfolio screenshot, use a 1440 × 900 viewport with the planner and graph
-visible. The repository does not include fabricated screenshots or usage claims.
+For a portfolio screenshot, use a desktop viewport with the planner and graph
+visible and reset the bundled demo first. Only capture the public fixture or a
+synthetic plan. Never commit real student data, fabricated usage claims, or a
+mockup presented as the running application.
 
 ## Portable plan format
 
